@@ -59,6 +59,7 @@ class SettingsItemsListView extends StatelessWidget {
           controller.navigateToConctiontheglavs();
         },
       ),
+
       /*
       SettingsItemModel(
         title: 'كاميرا التدريب',
@@ -67,7 +68,6 @@ class SettingsItemsListView extends StatelessWidget {
           controller.navigateToCamera();
         },
       ),*/
-
       SettingsItemModel(
         title: 'حول التطبيق',
         icon: Icons.info_rounded,

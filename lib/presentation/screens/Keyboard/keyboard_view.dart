@@ -13,6 +13,7 @@ class Keyboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).extension<AppColors>()!;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
@@ -67,7 +68,7 @@ class Keyboard extends StatelessWidget {
                                                   controller.displayText.value,
                                                   style: TextStyle(
                                                     fontFamily: "Cairo",
-                                                    color: Colors.black,
+                                                    color: colors.wordCard,
                                                     fontSize: (w * 0.045).clamp(
                                                       18.0,
                                                       28.0,
