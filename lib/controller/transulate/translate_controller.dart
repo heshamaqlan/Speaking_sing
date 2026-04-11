@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:speaking_sign/config/constants/constants.dart';
 import 'package:speaking_sign/data/models/animation/animation_model.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -33,6 +33,11 @@ class TranslateController extends GetxController {
     speech = stt.SpeechToText();
     textController.addListener(_onTextChanged);
     _loadDynamicData();
+
+    // Listen to Hive box changes to refresh list automatically
+    Hive.box<AnimationModel>(kAnimationBox).listenable().addListener(() {
+      _loadDynamicData();
+    });
   }
 
   Future<void> _loadDynamicData() async {
@@ -43,15 +48,16 @@ class TranslateController extends GetxController {
         activeGlbPath.value = 'file://$savedPath';
       }
 
+      animations.clear();
+      // 1. قراءة وإضافة الكلمات الثابتة أولاً
+      animations.addAll({"انا": "iam", "الان": "now", "مرحبا": "Hello"});
+
+      // 2. قراءة الكلمات المحملة من Hive وإضافتها إلى نفس القاموس
       final box = Hive.box<AnimationModel>(kAnimationBox);
       if (box.isNotEmpty) {
-        animations.clear();
         for (var anim in box.values) {
           animations[anim.nameAr] = anim.animationCode;
         }
-      } else {
-        // Fallback or leave empty
-        animations.addAll({"انا": "iam", "الان": "now", "مرحبا": "Hello"});
       }
     } catch (e) {
       print("Error loading dynamic data: \$e");
@@ -77,9 +83,14 @@ class TranslateController extends GetxController {
       setAnimation(animationName);
     } else {
       // Use Gemini to match the word dynamically
-      Get.snackbar("جاري البحث", "جاري البحث عن المعنى المطابق بالذكاء الاصطناعي...",
-          backgroundColor: Colors.blueAccent, colorText: Colors.white, duration: const Duration(seconds: 2));
-      
+      Get.snackbar(
+        "جاري البحث",
+        "جاري البحث عن المعنى المطابق بالذكاء الاصطناعي...",
+        backgroundColor: const Color.fromARGB(255, 152, 76, 175),
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
+
       String? matchedWord = await _findClosestWordWithGemini(text);
       if (matchedWord != null && animations.containsKey(matchedWord)) {
         textController.text = matchedWord; // Update the UI
@@ -87,18 +98,29 @@ class TranslateController extends GetxController {
         String animationName = animations[matchedWord]!;
         currentAnimation.value = animationName;
         setAnimation(animationName);
-        Get.snackbar("تصحيح تلقائي", "تم تحويل '$text' إلى '$matchedWord'", 
-            backgroundColor: Colors.green, colorText: Colors.white, duration: const Duration(seconds: 4));
+        Get.snackbar(
+          "تصحيح تلقائي",
+          "تم تحويل '$text' إلى '$matchedWord'",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 4),
+        );
       } else {
-        Get.snackbar("غير موجود", "لا توجد إشارة مسجلة للكلمة '$text'", 
-            backgroundColor: Colors.orange, colorText: Colors.white, duration: const Duration(seconds: 4));
+        Get.snackbar(
+          "غير موجود",
+          "لا توجد إشارة مسجلة للكلمة '$text'",
+          backgroundColor: const Color.fromARGB(255, 238, 255, 0),
+          colorText: Colors.white,
+          duration: const Duration(seconds: 4),
+        );
         print("No animation found for word: $text");
       }
     }
   }
 
   Future<String?> _findClosestWordWithGemini(String inputWord) async {
-    if (GeminiConfig.apiKey.isEmpty || GeminiConfig.apiKey == 'YOUR_API_KEY_HERE') {
+    if (GeminiConfig.apiKey.isEmpty ||
+        GeminiConfig.apiKey == 'YOUR_API_KEY_HERE') {
       return null;
     }
     if (animations.isEmpty) {
@@ -109,11 +131,12 @@ class TranslateController extends GetxController {
         model: GeminiConfig.modelName,
         apiKey: GeminiConfig.apiKey,
       );
-      
+
       List<String> availableWords = animations.keys.toList();
       String wordsListStr = availableWords.join('، ');
 
-      final prompt = "لدي قائمة من الكلمات المسجلة في القاموس وهي: [$wordsListStr].\n"
+      final prompt =
+          "لدي قائمة من الكلمات المسجلة في القاموس وهي: [$wordsListStr].\n"
           "قام المستخدم بإدخال الكلمة: '$inputWord'.\n"
           "مهمتك هي البحث عن أقرب كلمة من القاموس تطابق الكلمة المدخلة من حيث المعنى أو الجذر أو الاشتقاق (مثلاً إذا أدخل 'يعمل' والقاموس يحتوي على 'عمل' فتكون المطابقة صحيحة).\n"
           "إذا وجدت مطابقة مناسبة، أعد الكلمة المطابقة من القاموس فقط بدون أي إضافات أو نصوص أخرى.\n"
@@ -122,9 +145,12 @@ class TranslateController extends GetxController {
       final content = [Content.text(prompt)];
       final response = await model.generateContent(content);
       String? result = response.text?.trim();
-      
-      if (result != null && result != 'null' && result.isNotEmpty && availableWords.contains(result)) {
-         return result;
+
+      if (result != null &&
+          result != 'null' &&
+          result.isNotEmpty &&
+          availableWords.contains(result)) {
+        return result;
       }
       return null;
     } catch (e) {
@@ -201,6 +227,7 @@ class TranslateController extends GetxController {
       }
     }
   }
+
   void increaseSpeed() {
     speedValue.value += 0.5;
   }

@@ -1,4 +1,3 @@
-// no controller
 import 'package:flutter/material.dart';
 
 class WordDetailePageHeader extends StatelessWidget {
