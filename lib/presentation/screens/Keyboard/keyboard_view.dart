@@ -17,17 +17,17 @@ class Keyboard extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        top: false, // Let CustomTopHeader2 handle its top padding
+        top: false,
         bottom: true,
-        // LayoutBuilder يعطينا الارتفاع الفعلي المتاح بعد SafeArea
+       
         child: LayoutBuilder(
           builder: (context, bodyConstraints) {
-            // الثلثان العلويان من الارتفاع الفعلي المتاح
+           
             final keyboardHeight = bodyConstraints.maxHeight * (2 / 2.2);
 
             return Column(
               children: [
-                // ─── منطقة الكيبورد: الثلثان العلويان تماماً ───
+               
                 SizedBox(
                   height: keyboardHeight,
                   child: Column(
@@ -46,7 +46,7 @@ class Keyboard extends StatelessWidget {
 
                                 return Column(
                                   children: [
-                                    // 1. Text Display Area
+                                   
                                     Padding(
                                       padding: EdgeInsets.symmetric(
                                         horizontal: (w * 0.04).clamp(
@@ -68,7 +68,7 @@ class Keyboard extends StatelessWidget {
                                                   controller.displayText.value,
                                                   style: TextStyle(
                                                     fontFamily: "Cairo",
-                                                    color: colors.wordCard,
+                                                    color: Colors.black,
                                                     fontSize: (w * 0.045).clamp(
                                                       18.0,
                                                       28.0,
@@ -103,7 +103,7 @@ class Keyboard extends StatelessWidget {
                                       endIndent: 24,
                                     ),
 
-                                    // 2. Selected Signs Preview
+                                 
                                     Container(
                                       margin: EdgeInsets.symmetric(
                                         horizontal: (w * 0.04).clamp(
@@ -166,7 +166,7 @@ class Keyboard extends StatelessWidget {
                                       ),
                                     ),
 
-                                    // 3. The Keyboard Container
+
                                     Expanded(
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(
@@ -268,7 +268,7 @@ class Keyboard extends StatelessWidget {
                   ),
                 ),
 
-                // ─── الثلث السفلي: فارغ تماماً (لا يوجد أي widget) ───
+
                 const Spacer(),
               ],
             );

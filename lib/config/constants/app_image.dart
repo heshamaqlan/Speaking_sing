@@ -6,8 +6,19 @@ class AppImage {
   static const String onBordingimageThree = "$rootImages/onboarding_3.png";
   static const String onBordingimageFoure = "$rootImages/onboarding_4.png";
 
-  // char
+  // numbers
+  static const String one = "$rootImages/one.png";
+  static const String two = "$rootImages/two.png";
+  static const String three = "$rootImages/three.png";
+  static const String four = "$rootImages/four.png";
+  static const String five = "$rootImages/five.png";
+  static const String six = "$rootImages/six.png";
+  static const String saven = "$rootImages/saven.png";
+  static const String eight = "$rootImages/eghit.png";
+  static const String nine = "$rootImages/nine.png";
+  static const String zero = "$rootImages/zero.png";
 
+  // char
   static const String charA = "$rootImages/char_a.png";
   static const String charSS = "$rootImages/char_SS.png";
   static const String charHE = "$rootImages/char_HE.png";

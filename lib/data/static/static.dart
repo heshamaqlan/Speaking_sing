@@ -31,16 +31,16 @@ List<Onbordingmodel> onbordinglist = [
 
 final List<List<KeyboardModel>> keboardlist = [
   [
-    KeyboardModel(char: "0", assetpath: ""),
-    KeyboardModel(char: "1", assetpath: ""),
-    KeyboardModel(char: "2", assetpath: ""),
-    KeyboardModel(char: "3", assetpath: ""),
-    KeyboardModel(char: "4", assetpath: ""),
-    KeyboardModel(char: "5", assetpath: ""),
-    KeyboardModel(char: "6", assetpath: ""),
-    KeyboardModel(char: "7", assetpath: ""),
-    KeyboardModel(char: "8", assetpath: ""),
-    KeyboardModel(char: "9", assetpath: ""),
+    KeyboardModel(char: "", assetpath: AppImage.zero),
+    KeyboardModel(char: "", assetpath: AppImage.one),
+    KeyboardModel(char: "", assetpath: AppImage.two),
+    KeyboardModel(char: "", assetpath: AppImage.three),
+    KeyboardModel(char: "", assetpath: AppImage.four),
+    KeyboardModel(char: "", assetpath: AppImage.five),
+    KeyboardModel(char: "", assetpath: AppImage.six),
+    KeyboardModel(char: "", assetpath: AppImage.saven),
+    KeyboardModel(char: "", assetpath: AppImage.eight),
+    KeyboardModel(char: "", assetpath: AppImage.nine),
   ],
   [
     KeyboardModel(char: "ض", assetpath: AppImage.charDT),

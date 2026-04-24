@@ -17,7 +17,6 @@ class KeyboardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // استخدام MediaQuery للحصول على أبعاد الشاشة الكلية للمساعدة في الحسابات العامة
     final screenSize = MediaQuery.of(context).size;
     final isLandscape = screenSize.width > screenSize.height;
 
@@ -27,11 +26,9 @@ class KeyboardButton extends StatelessWidget {
           final w = constraints.maxWidth;
           final h = constraints.maxHeight;
 
-          // تحديد حالة الشاشات الصغيرة جداً بناءً على المساحة المتاحة للزر نفسه
           final isSmall = h < 50 || w < 30;
 
           return Padding(
-            // Padding مستجيب: يتغير حسب عرض المساحة المتاحة
             padding: EdgeInsets.all(
               w * 0.05,
             ).clamp(const EdgeInsets.all(2), const EdgeInsets.all(8)),
@@ -57,24 +54,18 @@ class KeyboardButton extends StatelessWidget {
                   children: [
                     if (imagePath.isNotEmpty)
                       Expanded(
-                        flex:
-                            isSmall
-                                ? 6
-                                : 7, // تقليل حجم الصورة في المساحات الضيقة
+                        flex: isSmall ? 6 : 7,
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal:
-                                w * 0.1, // ترك مسافة جانبية للصورة لتظل متناسقة
+                            horizontal: w * 0.1,
                             vertical: h * 0.05,
                           ),
                           child: Image.asset(
                             imagePath,
-                            fit:
-                                BoxFit
-                                    .contain, // يضمن عدم تمدد الصورة وحفاظها على أبعادها
+                            fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) {
                               return Icon(
-                                Icons.image_not_supported,
+                                Icons.numbers,
                                 size: (h * 0.3).clamp(15.0, 30.0),
                               );
                             },
@@ -91,7 +82,6 @@ class KeyboardButton extends StatelessWidget {
                           label,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            // أهم سطر للاستجابة: الخط يتغير حسب الارتفاع مع حدود دنيا وقصوى
                             fontSize: (h * 0.22).clamp(
                               9.0,
                               isLandscape ? 14.0 : 18.0,
